@@ -11,7 +11,7 @@ switch ( OperatingSystem.current() ) {
 		break
 	case OperatingSystem.LINUX:
 		project.ext.lwjglNatives = "natives-linux"
-	break
+		break
 	case OperatingSystem.MAC_OS:
 		project.ext.lwjglNatives = "natives-macos"
 		break
@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compile "org.lwjgl:lwjgl:$lwjglVersion"
+	compile "org.lwjgl:lwjgl:$lwjglVersion"
 	compile "org.lwjgl:lwjgl-glfw:$lwjglVersion"
 	compile "org.lwjgl:lwjgl-nanovg:$lwjglVersion"
 	compile "org.lwjgl:lwjgl-opengl:$lwjglVersion"
@@ -39,5 +39,3 @@ dependencies {
 sourceSets {
     main.java.srcDirs = ['src']
 }
-
-
