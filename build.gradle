@@ -25,8 +25,8 @@ repositories {
 dependencies {
 	compile "org.lwjgl:lwjgl:$lwjglVersion"
 	compile "org.lwjgl:lwjgl-glfw:$lwjglVersion"
-	compile "org.lwjgl:lwjgl-nanovg:$lwjglVersion"
 	compile "org.lwjgl:lwjgl-opengl:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-nanovg:$lwjglVersion"
 	compile "org.lwjgl:lwjgl-stb:$lwjglVersion"
 	compile "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
 	compile "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
@@ -37,5 +37,6 @@ dependencies {
 }
 
 sourceSets {
-    main.java.srcDirs = ['src']
+	main.java.srcDirs = ['src']
+	main.resources.srcDirs = ['res']
 }

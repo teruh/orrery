@@ -6,7 +6,7 @@ This is a digital orrery, or, a model of the solar system that demonstrates the 
  - Demonstrate the current position of the planets and their moons in relation to the sun
 
 ## Building
-This project uses Gradle to handle dependencies. This project uses LWJGL for the window and OpenGL rendering, as well as nanovg and stb as rendering helpers.
+This project uses Gradle to handle dependencies. The program uses LWJGL for the window and OpenGL rendering, as well as nanovg and stb as helpers.
 
 To build this project (with Eclipse):
 

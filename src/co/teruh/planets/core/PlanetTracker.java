@@ -1,9 +1,9 @@
-package co.teruh.planets;
+package co.teruh.planets.core;
 
 import co.teruh.planets.gui.Display;
 import co.teruh.planets.gui.Render;
 
-public class PlanetTracker {
+public class PlanetTracker implements Runnable {
 
 	private Display display;
 	private Render render;
@@ -15,6 +15,7 @@ public class PlanetTracker {
 		run();
 	}
 
+	@Override
 	public void run() {
 		display.init();
 		render.init();
