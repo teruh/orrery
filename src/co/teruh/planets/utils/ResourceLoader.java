@@ -7,24 +7,30 @@ import java.io.IOException;
 
 public class ResourceLoader {
 
-	public static String readFile(String file) {
+	/**
+	 * Turn GLSL source files into a string for compilation
+	 * 
+	 * @param file GLSL file name
+	 * @return GLSL source as a string
+	 */
+	public static String readGLSLFile(String file) {
 		StringBuilder string = new StringBuilder();
 		BufferedReader bufferedReader;
-		
+
 		try {
-			bufferedReader = new BufferedReader(new FileReader(new File("./res/"+ file)));
+			bufferedReader = new BufferedReader(new FileReader(new File("./res/" + file)));
 			String line;
-			while((line = bufferedReader.readLine()) != null) {
+			while ((line = bufferedReader.readLine()) != null) {
 				string.append(line);
 				string.append("\n");
 			}
-			
+
 			bufferedReader.close();
-		
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return string.toString();
 	}
 
