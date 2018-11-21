@@ -1,4 +1,4 @@
-package co.teruh.planets.gui;
+package co.teruh.planets.graphics;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -40,7 +40,7 @@ public class Display {
 		
 		GL.createCapabilities();
 		
-		glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 
 	public void update() {
