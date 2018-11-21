@@ -6,101 +6,81 @@ import co.teruh.planets.utils.ResourceLoader;
 
 public class Shader {
 
-	private int id; // Shader program handle
-	private int vertexID; // Vertex shader handle
-	private int fragmentID; // Fragment shader handle
+	private final int ID; // Shader program handle
 
 	/**
-	 * Create new Shader Program
+	 * Create new shaders
 	 * 
-	 * @throws Exception
+	 * @param vertex
+	 * @param fragment
 	 */
-	public Shader() throws Exception {
-		// Set our handle equal to new shader program
-		id = glCreateProgram();
-		if (id == 0) {
-			throw new Exception("ERROR: COULD NOT CREATE SHADER PROGRAM!");
-		}
+	public Shader(String vertex, String fragment) {
+		ID = loadShader(vertex, fragment);
 	}
 
 	/**
-	 * Create new vertex shader from .vs code
+	 * Load and create new shaders from source
 	 * 
-	 * @param vsPath path to the vertex shader
-	 * @throws Exception
+	 * @param vPath
+	 * @param fPath
+	 * @return shader program ID
 	 */
-	public void createVertex(String vsPath) throws Exception {
-		vertexID = createShader(ResourceLoader.readGLSLFile(vsPath), GL_VERTEX_SHADER);
+	public int loadShader(String vPath, String fPath) {
+		String vertexSource = ResourceLoader.readGLSLFile(vPath);
+		String fragmentSource = ResourceLoader.readGLSLFile(fPath);
+		return createShader(vertexSource, fragmentSource);
 	}
 
 	/**
-	 * Create new vertex shader from .fs code
+	 * Create vertex/fragment shaders, compile the GLSL source, and link/attack them
+	 * to the shader program
 	 * 
-	 * @param fsPath path to the fragment shader
-	 * @throws Exception
+	 * @param vertex   vertex shader source
+	 * @param fragment fragment shader source
+	 * @return shader program ID
 	 */
-	public void createFragment(String fsPath) throws Exception {
-		fragmentID = createShader(ResourceLoader.readGLSLFile(fsPath), GL_FRAGMENT_SHADER);
+	public int createShader(String vertex, String fragment) {
+		int program = glCreateProgram();
+		int vertexID = glCreateShader(GL_VERTEX_SHADER);
+		int fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
+
+		glShaderSource(vertexID, vertex);
+		glShaderSource(fragmentID, fragment);
+
+		glCompileShader(vertexID);
+		if (glGetShaderi(vertexID, GL_COMPILE_STATUS) == GL_FALSE) {
+			System.err.printf("Could not compile Vertex Shader! \n%s", glGetShaderInfoLog(vertexID));
+		}
+
+		glCompileShader(fragmentID);
+		if (glGetShaderi(fragmentID, GL_COMPILE_STATUS) == GL_FALSE) {
+			System.err.printf("Could not compile Fragment Shader! \n%s", glGetShaderInfoLog(fragmentID));
+		}
+
+		glAttachShader(program, vertexID);
+		glAttachShader(program, fragmentID);
+
+		glLinkProgram(program);
+		if (glGetProgrami(program, GL_LINK_STATUS) == 0) {
+			System.err.printf("Could not link shader! \n%s", glGetShaderInfoLog(program));
+		}
+		
+		glValidateProgram(program);
+		if (glGetProgrami(program, GL_VALIDATE_STATUS) == 0) {
+			System.err.printf("Could not validate shader program! \n%s", glGetShaderInfoLog(program));
+		}
+		
+		glDeleteShader(vertexID);
+		glDeleteShader(fragmentID);
+
+		return program;
 	}
 
-	/**
-	 * Create a new shader
-	 * 
-	 * @param glsl GLSL shader code
-	 * @param type type of shader (vertex or fragment)
-	 * @return shader handle
-	 * @throws Exception
-	 */
-	public int createShader(String glsl, int type) throws Exception {
-		// Create new shader in shader handle
-		int shader = glCreateShader(type);
-		if (shader == 0) {
-			throw new Exception("ERROR: COULD NOT CREATE " + type + " SHADER!");
-		}
-
-		// Get and compile GLSL source
-		glShaderSource(shader, glsl);
-		glCompileShader(shader);
-		if (glGetShaderi(shader, GL_COMPILE_STATUS) == 0) {
-			throw new Exception("ERROR: COULD NOT COMPILE SHADER. " + glGetShaderInfoLog(shader));
-		}
-
-		// Attach shader to our program
-		glAttachShader(id, shader);
-
-		return shader;
+	public void enable() {
+		glUseProgram(ID);
 	}
 
-	/**
-	 * Link generated shaders to our shader program
-	 * 
-	 * @throws Exception
-	 */
-	public void link() throws Exception {
-		glLinkProgram(id);
-		if (glGetProgrami(id, GL_LINK_STATUS) == 0) {
-			throw new Exception("ERROR: COULD NOT LINK SHADER. " + glGetShaderInfoLog(id));
-		}
-
-		if (vertexID != 0) {
-			glDetachShader(id, vertexID);
-		}
-
-		if (fragmentID != 0) {
-			glDetachShader(id, fragmentID);
-		}
-
-		glValidateProgram(id);
-		if (glGetProgrami(id, GL_VALIDATE_STATUS) == 0) {
-			throw new Exception("ERROR: COULD NOT VALIDATE SHADER. " + glGetShaderInfoLog(id));
-		}
-	}
-
-	public void bind() {
-		glUseProgram(id);
-	}
-
-	public void unbind() {
+	public void disable() {
 		glUseProgram(0);
 	}
 }

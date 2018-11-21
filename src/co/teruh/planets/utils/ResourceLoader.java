@@ -21,17 +21,16 @@ public class ResourceLoader {
 			bufferedReader = new BufferedReader(new FileReader(new File("./res/" + file)));
 			String line;
 			while ((line = bufferedReader.readLine()) != null) {
-				string.append(line);
-				string.append("\n");
+				string.append(line + "\n");
 			}
 
 			bufferedReader.close();
 
 		} catch (IOException e) {
+			System.err.println("Error reading GLSL source.");
 			e.printStackTrace();
 		}
 
 		return string.toString();
 	}
-
 }

@@ -3,6 +3,31 @@ package co.teruh.planets.graphics;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
 
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * THIS IS A TEMPORARY CLASS. 
+ * RENDERING WILL BE DONE IN THE RESPECTIVE "WORLD" CLASS.
+ * 3D SIMULATION -> SOLARSYSTEM.RENDER3D & SOLARSYSTEM.RENDER2D.
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 public class Render {
 
 	private Shader shader; // Shader program
@@ -12,12 +37,9 @@ public class Render {
 	 * 
 	 * @throws Exception
 	 */
-	public void init() throws Exception {
+	public void init() {
 		// Create shader program and load GLSL shaders
-		shader = new Shader();
-		shader.createVertex("vertex.vs");
-		shader.createFragment("fragment.fs");
-		shader.link();
+		shader = new Shader("vertex.vert", "fragment.frag");
 	}
 
 	/**
@@ -30,7 +52,7 @@ public class Render {
 		clear();
 
 		// Bind the shader program
-		shader.bind();
+		shader.enable();
 
 		glBindVertexArray(mesh.getVAO());
 		glEnableVertexAttribArray(0);
@@ -42,7 +64,7 @@ public class Render {
 		glBindVertexArray(0);
 
 		// Unbind shader program after drawing
-		shader.unbind();
+		shader.disable();
 	}
 
 	/**

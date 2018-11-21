@@ -4,7 +4,11 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import java.nio.IntBuffer;
+
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 
 public class Display {
 
@@ -12,8 +16,8 @@ public class Display {
 
 	private String title; // Window caption
 
-	private int width = 800; // Width of the window. TODO: make automatic
-	private int height = 600; // Height of the window. TODO: make automatic
+	private int width = 1280; // Width of the window. TODO: make automatic (half the screen)
+	private int height = 720; // Height of the window. TODO: make automatic (half the screen)
 
 	private boolean vsync; // Vsync functionality
 
@@ -30,15 +34,30 @@ public class Display {
 	 */
 	public void init() {
 		// Initialize all GLFW systems
-		glfwInit();
+		if (!glfwInit()) {
+			throw new RuntimeException("Failed to initialize GLFW.");
+		}
 
 		// Set window attributes
-		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 		// Create the new window
 		id = glfwCreateWindow(width, height, getTitle(), NULL, NULL);
+		if (id == NULL) {
+			throw new RuntimeException("Failed to initialize GLFW window.");
+		}
+
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer width = stack.mallocInt(1);
+			IntBuffer height = stack.mallocInt(1);
+
+			glfwGetWindowSize(id, width, height);
+
+			// Get primary monitor resolution and center window on screen
+			GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			glfwSetWindowPos(id, ((vidMode.width() - width.get(0)) / 2), ((vidMode.height() - height.get(0)) / 2));
+		}
 
 		glfwMakeContextCurrent(id);
 
@@ -102,7 +121,7 @@ public class Display {
 
 	/**
 	 * 
-	 * @return height of the window
+	 * @return current window height
 	 */
 	public int getHeight() {
 		return height;
