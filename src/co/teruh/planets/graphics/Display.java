@@ -19,7 +19,7 @@ public class Display {
 	private int width = 1280; // Width of the window. TODO: make automatic (half the screen)
 	private int height = 720; // Height of the window. TODO: make automatic (half the screen)
 
-	private boolean vsync; // Vsync functionality
+	private boolean vsync = true; // Vsync functionality
 
 	/**
 	 *
@@ -38,9 +38,13 @@ public class Display {
 			throw new RuntimeException("Failed to initialize GLFW.");
 		}
 
-		// Set window attributes
+		// Set window/OpenGL attributes
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
 		// Create the new window
 		id = glfwCreateWindow(width, height, getTitle(), NULL, NULL);
@@ -101,6 +105,14 @@ public class Display {
 	 */
 	public String getTitle() {
 		return title;
+	}
+
+	/**
+	 * 
+	 * @param title title of the window
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	/**

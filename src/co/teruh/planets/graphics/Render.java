@@ -48,9 +48,6 @@ public class Render {
 	 * @param mesh Mesh object to render
 	 */
 	public void render(Mesh mesh) {
-		// Clear the frame buffer
-		clear();
-
 		// Bind the shader program
 		shader.enable();
 
@@ -65,12 +62,5 @@ public class Render {
 
 		// Unbind shader program after drawing
 		shader.disable();
-	}
-
-	/**
-	 * Clear frame buffers so we can update every frame
-	 */
-	private void clear() {
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	}
 }

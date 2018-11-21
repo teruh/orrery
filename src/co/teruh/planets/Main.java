@@ -11,6 +11,6 @@ import co.teruh.planets.core.PlanetTracker;
  */
 public class Main {
 	public static void main(String[] args) {
-		new PlanetTracker("Orrery").run();
+		new PlanetTracker("Orrery");
 	}
 }
