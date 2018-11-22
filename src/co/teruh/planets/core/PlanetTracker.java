@@ -1,12 +1,9 @@
 package co.teruh.planets.core;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.*;
 
 import co.teruh.planets.graphics.Display;
 import co.teruh.planets.graphics.Mesh;
-import co.teruh.planets.graphics.Render;
 import co.teruh.planets.utils.Timer;
 
 public class PlanetTracker implements Runnable {
@@ -16,7 +13,6 @@ public class PlanetTracker implements Runnable {
 	private boolean isRunning = false; // Flag to track is program is/should be running
 
 	private Display display; // Used to create GLFW window
-	private Render render; // Used to handle graphical rendering
 	private Mesh mesh; // Used to handle meshes
 	private Timer timer; // Used for program's timestep
 	private Thread thread; // Handle programming threading
@@ -28,7 +24,6 @@ public class PlanetTracker implements Runnable {
 	 */
 	public PlanetTracker(String name) {
 		display = new Display(name);
-		render = new Render();
 		timer = new Timer();
 
 		thread = new Thread(this, "simulation");
@@ -41,14 +36,7 @@ public class PlanetTracker implements Runnable {
 	@Override
 	public void run() {
 		init();
-
-		// TEMPORARY: SEE JAVADOC IN RENDER.JAVA
-		float[] position = new float[] { -0.5f, 0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f, };
-		int[] indices = new int[] { 0, 1, 2, 0, 2, 3 };
-		mesh = new Mesh(position, indices);
-
 		loop();
-
 		destroy();
 	}
 
@@ -62,7 +50,7 @@ public class PlanetTracker implements Runnable {
 
 		// We've made it this far, program is running
 		isRunning = true;
-		
+
 		while (isRunning) {
 			delta = timer.getDelta();
 			accumulator += delta;
@@ -77,6 +65,8 @@ public class PlanetTracker implements Runnable {
 			render();
 			timer.updateFPS();
 
+			System.out.printf("%d FPS @ %d UPS\n", timer.getFPS(), timer.getUPS());
+			
 			// Reset timer
 			timer.update();
 
@@ -92,7 +82,6 @@ public class PlanetTracker implements Runnable {
 	 */
 	private void init() {
 		display.init();
-		render.init();
 	}
 
 	/**
@@ -107,7 +96,6 @@ public class PlanetTracker implements Runnable {
 	 */
 	private void render() {
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		render.render(mesh);
 	}
 
 	/**
