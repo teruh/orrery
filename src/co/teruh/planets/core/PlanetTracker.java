@@ -15,7 +15,6 @@ public class PlanetTracker implements Runnable {
 	private boolean isRunning = false; // Flag to track is program is/should be running
 
 	private Display display; // Used to create GLFW window
-	private Mesh mesh; // Used to handle meshes
 	private Timer timer; // Used for program's timestep
 	private Thread thread; // Handle programming threading
 	private SolarSystem solarSystem; // Handle rendering/processing of primary program level

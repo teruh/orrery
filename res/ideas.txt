@@ -1,0 +1,12 @@
+todo list:
+
+- add textures/texture reading
+- create camera
+
+
+- render the sun
+- render the skybox
+- hud
+- planets orbiting the sun
+
+- instanced rendering
