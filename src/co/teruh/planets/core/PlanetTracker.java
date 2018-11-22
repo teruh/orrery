@@ -4,10 +4,12 @@ import static org.lwjgl.opengl.GL11.*;
 
 import co.teruh.planets.graphics.Display;
 import co.teruh.planets.graphics.Mesh;
+import co.teruh.planets.simulation.SolarSystem;
 import co.teruh.planets.utils.Timer;
 
 public class PlanetTracker implements Runnable {
 
+	private int targetFPS = 75; // Ideal frames per second
 	private final int TARGET_UPS = 30; // Ideal updates per second
 
 	private boolean isRunning = false; // Flag to track is program is/should be running
@@ -16,6 +18,7 @@ public class PlanetTracker implements Runnable {
 	private Mesh mesh; // Used to handle meshes
 	private Timer timer; // Used for program's timestep
 	private Thread thread; // Handle programming threading
+	private SolarSystem solarSystem; // Handle rendering/processing of primary program level
 
 	/**
 	 * Creates a new instance of our GLFW window and renderer, starts a new thread
@@ -25,6 +28,7 @@ public class PlanetTracker implements Runnable {
 	public PlanetTracker(String name) {
 		display = new Display(name);
 		timer = new Timer();
+		solarSystem = new SolarSystem();
 
 		thread = new Thread(this, "simulation");
 		thread.start();
@@ -66,9 +70,14 @@ public class PlanetTracker implements Runnable {
 			timer.updateFPS();
 
 			System.out.printf("%d FPS @ %d UPS\n", timer.getFPS(), timer.getUPS());
-			
+
 			// Reset timer
 			timer.update();
+
+			// If vsync is enabled, wait for vsync
+			if (display.isVsync()) {
+				sync();
+			}
 
 			// Check if user has sent a window close event
 			if (display.isRequestedClose()) {
@@ -78,10 +87,26 @@ public class PlanetTracker implements Runnable {
 	}
 
 	/**
+	 * Sync with target FPS
+	 */
+	private void sync() {
+		float loop = 1f / targetFPS;
+		double endTime = timer.getLastLoopTime() + loop;
+		while (timer.getTime() < endTime) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
 	 * Initialize program systems called at startup
 	 */
 	private void init() {
 		display.init();
+		solarSystem.init();
 	}
 
 	/**
@@ -96,6 +121,7 @@ public class PlanetTracker implements Runnable {
 	 */
 	private void render() {
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		solarSystem.render();
 	}
 
 	/**
