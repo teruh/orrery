@@ -2,11 +2,21 @@ package co.teruh.planets.graphics;
 
 import static org.lwjgl.opengl.GL20.*;
 
+import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.system.MemoryStack;
+
 import co.teruh.planets.utils.ResourceLoader;
 
 public class Shader {
 
 	private final int ID; // Shader program handle
+	
+	private Map<String, Integer> locCache;
 
 	/**
 	 * Create new shaders
@@ -16,6 +26,7 @@ public class Shader {
 	 */
 	public Shader(String vertex, String fragment) {
 		ID = loadShader(vertex, fragment);
+		locCache = new HashMap<>();
 	}
 
 	/**
@@ -81,6 +92,43 @@ public class Shader {
 		glDeleteShader(fragmentID);
 
 		return program;
+	}
+	
+	public int getUniform(String name) {
+		if (locCache.containsKey(name)) {
+			return locCache.get(name);
+		}
+		int result = glGetUniformLocation(ID, name);
+		if (result < 0) {
+			System.err.printf("Could not find %s uniform.\n", name);
+		} else {
+			locCache.put(name, result);
+		}
+		return result;
+	}
+	
+	public void setUniform1i(String name, int x) {
+		glUniform1i(getUniform(name), x);
+	}
+	
+	public void setUniform1f(String name, float x) {
+		glUniform1f(getUniform(name), x);
+	}
+	
+	public void setUniform2f(String name, float x, float y) {
+		glUniform2f(getUniform(name), x, y);
+	}
+	
+	public void setUniform3f(String name, Vector3f vector) {
+		glUniform3f(getUniform(name), vector.x, vector.y, vector.z);
+	}
+	
+	public void setUniformMatrix4f(String name, Matrix4f matrix) {
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+            FloatBuffer fb = stack.mallocFloat(16);
+            matrix.get(fb);
+            glUniformMatrix4fv(locCache.get(name), false, fb);
+        }
 	}
 
 	/**

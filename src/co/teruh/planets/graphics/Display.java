@@ -112,7 +112,7 @@ public class Display {
 	 * @param title title of the window
 	 */
 	public void setTitle(String title) {
-		this.title = title;
+		glfwSetWindowTitle(id, title);
 	}
 
 	/**

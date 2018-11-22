@@ -3,7 +3,6 @@ package co.teruh.planets.core;
 import static org.lwjgl.opengl.GL11.*;
 
 import co.teruh.planets.graphics.Display;
-import co.teruh.planets.graphics.Mesh;
 import co.teruh.planets.simulation.SolarSystem;
 import co.teruh.planets.utils.Timer;
 
@@ -54,6 +53,9 @@ public class PlanetTracker implements Runnable {
 		// We've made it this far, program is running
 		isRunning = true;
 
+		String windowFPS;
+		String windowUPS;
+		
 		while (isRunning) {
 			delta = timer.getDelta();
 			accumulator += delta;
@@ -68,7 +70,9 @@ public class PlanetTracker implements Runnable {
 			render();
 			timer.updateFPS();
 
-			System.out.printf("%d FPS @ %d UPS\n", timer.getFPS(), timer.getUPS());
+			windowFPS = Integer.toString(timer.getFPS());
+			windowUPS = Integer.toString(timer.getUPS());
+			display.setTitle("Orrery | " + " " + windowFPS + " FPS @ " + windowUPS + " UPS");
 
 			// Reset timer
 			timer.update();
@@ -105,7 +109,7 @@ public class PlanetTracker implements Runnable {
 	 */
 	private void init() {
 		display.init();
-		solarSystem.init();
+		solarSystem.init(display);
 	}
 
 	/**
