@@ -27,11 +27,13 @@ repositories {
 
 dependencies {
 	compile "org.lwjgl:lwjgl:$lwjglVersion"
+	compile "org.lwjgl:lwjgl-assimp:$lwjglVersion"
 	compile "org.lwjgl:lwjgl-glfw:$lwjglVersion"
 	compile "org.lwjgl:lwjgl-opengl:$lwjglVersion"
 	compile "org.lwjgl:lwjgl-nanovg:$lwjglVersion"
 	compile "org.lwjgl:lwjgl-stb:$lwjglVersion"
 	compile "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
+	compile "org.lwjgl:lwjgl-assimp:$lwjglVersion:$lwjglNatives"
 	compile "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
 	compile "org.lwjgl:lwjgl-nanovg:$lwjglVersion:$lwjglNatives"
 	compile "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"

@@ -1,12 +1,18 @@
 todo list:
 
+- change mesh rendering system, use Assimp
 
-- create camera
-
-
-- render the sun
-- render the skybox
-- hud
-- planets orbiting the sun
-
-- instanced rendering
+- CelestialBody
+  	|-> Star
+     	- Sun
+  	|-> Planet
+     	- Mercury
+     
+     
+	each instance of CelestialBody will create a Sphere mesh (from obj)
+	attributes of celestialbodies:
+		- diameter > this scales the sphere mesh
+	
+		attributes of stars:
+			- light > how brightly a star radiates light
+			- light color

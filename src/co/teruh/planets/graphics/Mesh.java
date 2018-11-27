@@ -17,7 +17,7 @@ public class Mesh {
 	 * @param vertices
 	 * @param indices
 	 */
-	public Mesh(float[] vertices, int[] indices, float[] textureCoords, Texture texture) {
+	public Mesh(float[] vertices, int[] indices, float[] textureCoords) {
 		vertexCount = indices.length;
 		
 		vao = glGenVertexArrays();
