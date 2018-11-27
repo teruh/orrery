@@ -6,6 +6,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
@@ -33,6 +34,8 @@ public class Display {
 	 * Initialize GLFW window and create OpenGL capabilities
 	 */
 	public void init() {
+		GLFWErrorCallback.createPrint(System.err).set();
+		
 		// Initialize all GLFW systems
 		if (!glfwInit()) {
 			throw new RuntimeException("Failed to initialize GLFW.");
@@ -99,7 +102,15 @@ public class Display {
 	public boolean isRequestedClose() {
 		return glfwWindowShouldClose(id);
 	}
+	
+	public boolean isKeyPressed(int key) {
+		return glfwGetKey(id, key) == GLFW_PRESS;
+	}
 
+	public long getID() {
+		return id;
+	}
+	
 	/**
 	 * 
 	 * @return current title of the window

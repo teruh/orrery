@@ -1,7 +1,7 @@
 package co.teruh.planets.graphics;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.stb.STBImage.*;
 
 import java.nio.ByteBuffer;
@@ -11,23 +11,35 @@ import org.lwjgl.system.MemoryStack;
 
 public class Texture {
 
-	private int id;
-	private int width, height;
+	private int id; // Texture handle
+	
+	private int width, height; // Texture dimensions
 
+	/**
+	 * Create a new texture
+	 */
 	public Texture() {
 		id = glGenTextures();
 	}
-	
+
+	/**
+	 * Load and create a new texture
+	 * 
+	 * @param texPath path to texture
+	 */
 	public Texture(String texPath) {
 		loadTexture(texPath);
 	}
 
+	/**
+	 * Bind texture to program
+	 */
 	public void bind() {
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
 	/**
-	 * Load texture
+	 * Load texture from file
 	 * 
 	 * @param texPath path to texture image
 	 * @return id of the texture
@@ -54,19 +66,27 @@ public class Texture {
 		}
 	}
 
+	/**
+	 * Create a new GL texture
+	 * 
+	 * @param width   width of the texture
+	 * @param height  height of the texture
+	 * @param imgData texture buffer
+	 * @return id of the texture
+	 */
 	public int createTexture(int width, int height, ByteBuffer imgData) {
+		// Create a new texture instance
 		Texture texture = new Texture();
 		texture.setWidth(width);
 		texture.setHeight(height);
 
 		texture.bind();
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imgData);
 
 		return id;

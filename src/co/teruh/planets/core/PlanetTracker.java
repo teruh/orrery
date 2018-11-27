@@ -27,7 +27,7 @@ public class PlanetTracker implements Runnable {
 		display = new Display(name);
 		timer = new Timer();
 		solarSystem = new SolarSystem();
-
+		
 		thread = new Thread(this, "simulation");
 		thread.start();
 	}
@@ -55,7 +55,7 @@ public class PlanetTracker implements Runnable {
 
 		String windowFPS;
 		String windowUPS;
-		
+
 		while (isRunning) {
 			delta = timer.getDelta();
 			accumulator += delta;
@@ -117,6 +117,7 @@ public class PlanetTracker implements Runnable {
 	 */
 	private void update() {
 		display.update();
+		input();
 		solarSystem.update();
 	}
 
@@ -126,6 +127,10 @@ public class PlanetTracker implements Runnable {
 	private void render() {
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		solarSystem.render(display);
+	}
+
+	private void input() {
+		solarSystem.input(display);
 	}
 
 	/**

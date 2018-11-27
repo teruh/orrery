@@ -1,21 +1,25 @@
 package co.teruh.planets.simulation;
 
 import org.joml.Matrix4f;
-import co.teruh.planets.entities.Star;
-import co.teruh.planets.graphics.Display;
-import co.teruh.planets.graphics.Mesh;
-import co.teruh.planets.graphics.Shader;
-import co.teruh.planets.graphics.Texture;
+import org.joml.Vector3f;
+import static org.lwjgl.glfw.GLFW.*;
+
+import co.teruh.planets.entities.*;
+import co.teruh.planets.graphics.*;
 
 public class SolarSystem extends Universe {
 
 	private Shader testShader;
 	private Mesh testMesh;
+
 	private Matrix4f projectionMatrix;
 
 	// test
 	private Star star;
 	private Texture texture;
+	private Camera camera;
+
+	private Vector3f cameraPos;
 
 	private static final float FOV = (float) Math.toRadians(60.0f);
 	private static final float Z_NEAR = 0.01f;
@@ -25,10 +29,13 @@ public class SolarSystem extends Universe {
 		testShader = new Shader("vertex.vert", "fragment.frag");
 		texture = new Texture("res/bean.png");
 
+		camera = new Camera();
+		cameraPos = new Vector3f();
+
 		float aspectRatio = (float) display.getWidth() / display.getHeight();
 		projectionMatrix = new Matrix4f().perspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
 		testShader.getUniform("projectionMatrix");
-		testShader.getUniform("worldMatrix");
+		testShader.getUniform("modelViewMatrix");
 		testShader.getUniform("texture_sampler");
 
 		float[] vertices = new float[] { -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f,
@@ -50,14 +57,15 @@ public class SolarSystem extends Universe {
 	public void render(Display display) {
 		testShader.enable();
 
-		Matrix4f projectionMatrix = super.getProjectionMatrix(FOV, display.getWidth(), display.getHeight(), Z_NEAR,
-				Z_FAR);
+		projectionMatrix = super.getProjectionMatrix(FOV, display.getWidth(), display.getHeight(), Z_NEAR, Z_FAR);
 		testShader.setUniformMatrix4f("projectionMatrix", projectionMatrix);
 
-		Matrix4f worldMatrix = super.getWorldMatrix(star.getPosition(), star.getRotation(), star.getScale());
-		testShader.setUniformMatrix4f("worldMatrix", worldMatrix);
+		Matrix4f viewMatrix = super.getViewMatrix(camera);
 
 		testShader.setUniform1i("texture_sampler", 0);
+
+		Matrix4f modelViewMatrix = super.getModelViewMatrix(star, viewMatrix);
+		testShader.setUniformMatrix4f("modelViewMatrix", modelViewMatrix);
 
 		star.getMesh().render();
 
@@ -71,9 +79,29 @@ public class SolarSystem extends Universe {
 		}
 
 		star.setRotation(rotation, rotation, rotation);
+
+		camera.updatePosition(cameraPos.x * 0.1f, cameraPos.y * 0.1f, cameraPos.z * 0.1f);
 	}
 
-	public void registerBodies() {
+	public void input(Display display) {
+		cameraPos.set(0, 0, 0);
+		
+		if (display.isKeyPressed(GLFW_KEY_W)) {
+			cameraPos.z = -1;
+		} else if (display.isKeyPressed(GLFW_KEY_S)) {
+			cameraPos.z = 1;
+		}
+		
+		if (display.isKeyPressed(GLFW_KEY_A)) {
+			cameraPos.x = -1;
+		} else if (display.isKeyPressed(GLFW_KEY_D)) {
+			cameraPos.x = 1;
+		}
+		
+		if (display.isKeyPressed(GLFW_KEY_LEFT_CONTROL)) {
+			cameraPos.y = -1;
+		} else if (display.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+			cameraPos.y = 1;
+		}
 	}
-
 }

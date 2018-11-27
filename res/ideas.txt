@@ -1,6 +1,6 @@
 todo list:
 
-- add textures/texture reading
+
 - create camera
 
 
