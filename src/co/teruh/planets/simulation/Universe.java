@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 public class Universe {
 
 	private Matrix4f projectionMatrix;
+	private Matrix4f viewMatrix;
 	private Matrix4f worldMatrix;
 
 	public Universe() {

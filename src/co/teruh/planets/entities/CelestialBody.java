@@ -21,7 +21,6 @@ public class CelestialBody {
 		scale = 1;
 		position = new Vector3f(0, 0, 0);
 		rotation = new Vector3f(0, 0, 0);
-		
 	}
 	
 	public Mesh getMesh() {

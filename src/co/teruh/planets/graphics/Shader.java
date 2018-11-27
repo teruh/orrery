@@ -10,7 +10,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 
-import co.teruh.planets.utils.ResourceLoader;
+import co.teruh.planets.utils.GLSLParser;
 
 public class Shader {
 
@@ -37,8 +37,8 @@ public class Shader {
 	 * @return shader program ID
 	 */
 	public int loadShader(String vPath, String fPath) {
-		String vertexSource = ResourceLoader.readGLSLFile(vPath);
-		String fragmentSource = ResourceLoader.readGLSLFile(fPath);
+		String vertexSource = GLSLParser.parseGLSL(vPath);
+		String fragmentSource = GLSLParser.parseGLSL(fPath);
 		return createShader(vertexSource, fragmentSource);
 	}
 
