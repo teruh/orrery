@@ -117,6 +117,7 @@ public class PlanetTracker implements Runnable {
 	 */
 	private void update() {
 		display.update();
+		solarSystem.update();
 	}
 
 	/**
@@ -124,7 +125,7 @@ public class PlanetTracker implements Runnable {
 	 */
 	private void render() {
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		solarSystem.render();
+		solarSystem.render(display);
 	}
 
 	/**
